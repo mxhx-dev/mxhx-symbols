@@ -1,0 +1,11 @@
+{
+  "name": "mxhx-symbols",
+  "url": "https://mxhx.dev/",
+  "license": "Apache",
+  "tags": ["xml", "mxhx", "markup", "gui"],
+  "description": "Types representing MXHX symbols, such as classes, interfaces, abstracts, and enums",
+  "version": "1.0.0",
+  "classPath": "src",
+  "contributors": ["bowlerhat"],
+  "releasenote": "Initial release"
+}
