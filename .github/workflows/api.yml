@@ -18,7 +18,7 @@ jobs:
       - name: Set up Haxelib dependencies
         run: |
           haxelib install dox --quiet
-          haxelib dev mxhx-symbols $GITHUB_WORKSPACE
+          haxelib dev mxhx-symbols ${{ github.workspace }}
       - name: Build API reference
         working-directory: docs
         run: haxe docs.hxml
