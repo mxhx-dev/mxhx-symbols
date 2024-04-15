@@ -14,8 +14,6 @@
 
 package mxhx.symbols;
 
-import haxe.macro.Expr.MetadataEntry;
-
 /**
 	Any symbol represented in MXHX.
 **/
@@ -44,5 +42,5 @@ interface IMXHXSymbol {
 	/**
 		The metadata associated with this symbol. May be null.
 	**/
-	public var meta:Array<MetadataEntry>;
+	public var meta:Array<{name:String, ?params:Array<String>}>;
 }

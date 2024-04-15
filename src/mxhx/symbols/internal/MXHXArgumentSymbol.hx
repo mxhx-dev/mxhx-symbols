@@ -1,6 +1,5 @@
 package mxhx.symbols.internal;
 
-import haxe.macro.Expr.MetadataEntry;
 import mxhx.symbols.IMXHXArgumentSymbol;
 import mxhx.symbols.IMXHXTypeSymbol;
 
@@ -11,7 +10,7 @@ class MXHXArgumentSymbol implements IMXHXArgumentSymbol {
 	public var offsets:{start:Int, end:Int};
 	public var type:IMXHXTypeSymbol;
 	public var optional:Bool;
-	public var meta:Array<MetadataEntry>;
+	public var meta:Array<{name:String, ?params:Array<String>}>;
 
 	public function new(name:String, type:IMXHXTypeSymbol, optional:Bool) {
 		this.name = name;
