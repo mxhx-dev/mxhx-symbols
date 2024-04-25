@@ -18,5 +18,6 @@ package mxhx.symbols;
 	An MXHX symbol representing a Haxe abstract.
 **/
 interface IMXHXAbstractSymbol extends IMXHXTypeSymbol {
+	public var type:IMXHXTypeSymbol;
 	public var from:Array<IMXHXTypeSymbol>;
 }
