@@ -72,7 +72,7 @@ class MXHXSymbolTools {
 		return null;
 	}
 
-	public function classSymbolExtends(classSymbol:IMXHXClassSymbol, possibleSuperClass:IMXHXClassSymbol):Bool {
+	public static function classSymbolExtends(classSymbol:IMXHXClassSymbol, possibleSuperClass:IMXHXClassSymbol):Bool {
 		var currentClassSymbol = classSymbol.superClass;
 		while (currentClassSymbol != null) {
 			if (currentClassSymbol == possibleSuperClass) {
@@ -83,7 +83,7 @@ class MXHXSymbolTools {
 		return false;
 	}
 
-	public function typeSymbolImplements(typeSymbol:IMXHXTypeSymbol, possibleSuperInterface:IMXHXInterfaceSymbol):Bool {
+	public static function typeSymbolImplements(typeSymbol:IMXHXTypeSymbol, possibleSuperInterface:IMXHXInterfaceSymbol):Bool {
 		if ((typeSymbol is IMXHXClassSymbol)) {
 			var classSymbol:IMXHXClassSymbol = cast typeSymbol;
 			var currentClassSymbol = classSymbol;
@@ -104,6 +104,16 @@ class MXHXSymbolTools {
 				}
 				interfacesToSearch = interfacesToSearch.concat(currentInterfaceSymbol.interfaces);
 			}
+		}
+		return false;
+	}
+
+	public static function typeSymbolExtendsOrImplements(typeSymbol:IMXHXTypeSymbol, possibleSuperClassOrInterface:IMXHXTypeSymbol):Bool {
+		if ((typeSymbol is IMXHXClassSymbol) && (possibleSuperClassOrInterface is IMXHXClassSymbol)) {
+			return classSymbolExtends(cast typeSymbol, cast possibleSuperClassOrInterface);
+		}
+		if ((possibleSuperClassOrInterface is IMXHXInterfaceSymbol)) {
+			return typeSymbolImplements(typeSymbol, cast possibleSuperClassOrInterface);
 		}
 		return false;
 	}
