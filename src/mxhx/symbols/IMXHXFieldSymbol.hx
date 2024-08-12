@@ -19,6 +19,11 @@ package mxhx.symbols;
 **/
 interface IMXHXFieldSymbol extends IMXHXSymbol {
 	/**
+		The field's owning type.
+	**/
+	public var parent:IMXHXTypeSymbol;
+
+	/**
 		The field's type.
 	**/
 	public var type:IMXHXTypeSymbol;
