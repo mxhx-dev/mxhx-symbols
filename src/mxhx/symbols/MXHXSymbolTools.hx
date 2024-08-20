@@ -72,6 +72,43 @@ class MXHXSymbolTools {
 		return null;
 	}
 
+	public static function canAssignTo(fromType:IMXHXTypeSymbol, toType:IMXHXTypeSymbol):Bool {
+		if (fromType == null || toType == null) {
+			return false;
+		}
+		if (fromType == toType) {
+			return true;
+		}
+		if (toType.name == "Null") {
+			if (fromType.name == "Null") {
+				if (canAssignTo(fromType.params[0], toType.params[0])) {
+					return true;
+				}
+			} else if (canAssignTo(fromType, toType.params[0])) {
+				return true;
+			}
+		}
+		if (MXHXSymbolTools.typeSymbolExtendsOrImplements(fromType, toType)) {
+			return true;
+		}
+		if (fromType.name == toType.name) {
+			if (toType.params.length > 0 && fromType.params.length == 0) {
+				return true;
+			}
+			var paramsMatch = true;
+			for (i in 0...toType.params.length) {
+				var toParam = toType.params[i];
+				var fromParam = fromType.params[i];
+				if (toParam != null && fromParam != null) {
+					paramsMatch = false;
+					break;
+				}
+			}
+			return paramsMatch;
+		}
+		return false;
+	}
+
 	public static function classSymbolExtends(classSymbol:IMXHXClassSymbol, possibleSuperClass:IMXHXClassSymbol):Bool {
 		var currentClassSymbol = classSymbol.superClass;
 		while (currentClassSymbol != null) {
