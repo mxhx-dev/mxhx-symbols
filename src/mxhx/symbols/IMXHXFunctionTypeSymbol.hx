@@ -15,10 +15,16 @@
 package mxhx.symbols;
 
 /**
-	An MXHX symbol representing an argument accepted by a function type or enum
-	field symbol.
+	An MXHX symbol representing a [Haxe function type](https://haxe.org/manual/types-function.html).
 **/
-interface IMXHXArgumentSymbol extends IMXHXSymbol {
-	public var type:IMXHXTypeSymbol;
-	public var optional:Bool;
+interface IMXHXFunctionTypeSymbol extends IMXHXTypeSymbol {
+	/**
+		The arguments of the function.
+	**/
+	public var arguments:Array<IMXHXArgumentSymbol>;
+
+	/**
+		The return type of the function.
+	**/
+	public var returnType:IMXHXTypeSymbol;
 }
