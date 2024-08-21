@@ -162,7 +162,6 @@ class MXHXSymbolTools {
 	public static function typeSymbolImplements(typeSymbol:IMXHXTypeSymbol, possibleSuperInterface:IMXHXInterfaceSymbol):Bool {
 		if ((typeSymbol is IMXHXClassSymbol)) {
 			var classSymbol:IMXHXClassSymbol = cast typeSymbol;
-			var currentClassSymbol = classSymbol;
 			var hasParams = possibleSuperInterface.params.length > 0;
 			var possibleQnameWithoutParams:String = null;
 			if (hasParams) {
@@ -171,25 +170,27 @@ class MXHXSymbolTools {
 					possibleQnameWithoutParams = possibleSuperInterface.pack.join(".") + "." + possibleQnameWithoutParams;
 				}
 			}
+			var currentClassSymbol = classSymbol;
 			while (currentClassSymbol != null) {
-				var foundInterface = Lambda.find(currentClassSymbol.interfaces, currentInterface -> {
-					if (currentInterface == possibleSuperInterface) {
-						return true;
-					}
-					if (hasParams) {
-						var currentQnameWithoutParams = currentInterface.name;
-						if (currentInterface.pack.length > 0) {
-							currentQnameWithoutParams = currentInterface.pack.join(".") + "." + currentQnameWithoutParams;
-						}
-						if (currentQnameWithoutParams == possibleQnameWithoutParams) {
-							// TODO: check that params are compatible
+				for (implementsInterfaceSymbol in currentClassSymbol.interfaces) {
+					var interfacesToSearch = [implementsInterfaceSymbol];
+					while (interfacesToSearch.length > 0) {
+						var currentInterfaceSymbol = interfacesToSearch.shift();
+						if (currentInterfaceSymbol == possibleSuperInterface) {
 							return true;
 						}
+						if (hasParams) {
+							var currentQnameWithoutParams = currentInterfaceSymbol.name;
+							if (currentInterfaceSymbol.pack.length > 0) {
+								currentQnameWithoutParams = currentInterfaceSymbol.pack.join(".") + "." + currentQnameWithoutParams;
+							}
+							if (currentQnameWithoutParams == possibleQnameWithoutParams) {
+								// TODO: check that params are compatible
+								return true;
+							}
+						}
+						interfacesToSearch = interfacesToSearch.concat(currentInterfaceSymbol.interfaces);
 					}
-					return false;
-				});
-				if (foundInterface != null) {
-					return true;
 				}
 				currentClassSymbol = currentClassSymbol.superClass;
 			}

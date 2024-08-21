@@ -27,6 +27,7 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 	private var customExtendingInterfaceType:IMXHXInterfaceSymbol;
 	private var customImplementingClassType:IMXHXClassSymbol;
 	private var customImplementingSubclassType:IMXHXClassSymbol;
+	private var customImplementingClassType2:IMXHXClassSymbol;
 
 	public function setup():Void {
 		anyType = new MXHXAbstractSymbol("Any");
@@ -46,10 +47,13 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 
 		customClassType = new MXHXClassSymbol("MyClass", ["com", "example"]);
 		customSubclassType = new MXHXClassSymbol("MySubclass", ["com", "example"], null, customClassType);
+
 		customInterfaceType = new MXHXInterfaceSymbol("MyInterface", ["com", "example"]);
 		customExtendingInterfaceType = new MXHXInterfaceSymbol("MyExtendingInterface", ["com", "example"], null, [customInterfaceType]);
+
 		customImplementingClassType = new MXHXClassSymbol("MyImplementingClass", ["com", "example"], null, null, [customInterfaceType]);
 		customImplementingSubclassType = new MXHXClassSymbol("MyImplementingSubclass", ["com", "example"], null, customImplementingClassType);
+		customImplementingClassType2 = new MXHXClassSymbol("MyImplementingClass", ["com", "example"], null, null, [customExtendingInterfaceType]);
 	}
 
 	public function testAssignToAny():Void {
@@ -185,6 +189,7 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customSubclassType, customClassType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customInterfaceType, customClassType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customExtendingInterfaceType, customClassType));
+		Assert.isFalse(MXHXSymbolTools.canAssignTo(customImplementingClassType2, customClassType));
 	}
 
 	public function testAssignToCustomSubclass():Void {
@@ -200,6 +205,7 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customSubclassType, customSubclassType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customInterfaceType, customSubclassType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customExtendingInterfaceType, customSubclassType));
+		Assert.isFalse(MXHXSymbolTools.canAssignTo(customImplementingClassType2, customSubclassType));
 	}
 
 	public function testAssignToCustomInterface():Void {
@@ -217,6 +223,7 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customExtendingInterfaceType, customInterfaceType));
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customImplementingClassType, customInterfaceType));
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customImplementingSubclassType, customInterfaceType));
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(customImplementingClassType2, customInterfaceType));
 	}
 
 	public function testAssignToCustomExtendingInterface():Void {
@@ -234,5 +241,6 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customExtendingInterfaceType, customExtendingInterfaceType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customImplementingClassType, customExtendingInterfaceType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customImplementingSubclassType, customExtendingInterfaceType));
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(customImplementingClassType2, customExtendingInterfaceType));
 	}
 }
