@@ -11,7 +11,7 @@ class MXHXTypeSymbol implements IMXHXTypeSymbol {
 	public var qname:String;
 	public var module:String;
 	public var params:Array<IMXHXTypeSymbol>;
-	public var meta:Array<{name:String, ?params:Array<String>}>;
+	public var meta:Array<{name:String, ?params:Array<String>}> = [];
 	public var isPrivate:Bool = false;
 
 	public function new(name:String, ?pack:Array<String>, ?params:Array<IMXHXTypeSymbol>) {
