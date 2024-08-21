@@ -82,6 +82,21 @@ class MXHXSymbolTools {
 		if ((toType.name == "Any" || toType.name == "Dynamic") && toType.pack.length == 0) {
 			return true;
 		}
+		if ((fromType.name == "Any" || fromType.name == "Dynamic") && fromType.pack.length == 0) {
+			return true;
+		}
+		if ((fromType is IMXHXAbstractSymbol)) {
+			var fromAbstract:IMXHXAbstractSymbol = cast fromType;
+			if (canAssignAbstractTo(fromAbstract, toType)) {
+				return true;
+			}
+		}
+		if ((toType is IMXHXAbstractSymbol)) {
+			var toAbstract:IMXHXAbstractSymbol = cast toType;
+			if (canAssignToAbstract(fromType, toAbstract)) {
+				return true;
+			}
+		}
 		if (toType.name == "Null") {
 			if (fromType.name == "Null") {
 				if (canAssignTo(fromType.params[0], toType.params[0])) {
@@ -108,6 +123,27 @@ class MXHXSymbolTools {
 				}
 			}
 			return paramsMatch;
+		}
+		return false;
+	}
+
+	private static function canAssignAbstractTo(fromAbstract:IMXHXAbstractSymbol, toType:IMXHXTypeSymbol):Bool {
+		if (fromAbstract.to.indexOf(toType) != -1) {
+			return true;
+		}
+		if (Lambda.findIndex(fromAbstract.meta, meta -> meta.name == ":transitive") != -1) {
+			for (fromOtherType in fromAbstract.to) {
+				if (canAssignTo(fromOtherType, toType)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static function canAssignToAbstract(fromType:IMXHXTypeSymbol, toAbstract:IMXHXAbstractSymbol):Bool {
+		if (toAbstract.from.indexOf(fromType) != -1) {
+			return true;
 		}
 		return false;
 	}
