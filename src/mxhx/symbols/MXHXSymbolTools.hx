@@ -163,8 +163,32 @@ class MXHXSymbolTools {
 		if ((typeSymbol is IMXHXClassSymbol)) {
 			var classSymbol:IMXHXClassSymbol = cast typeSymbol;
 			var currentClassSymbol = classSymbol;
+			var hasParams = possibleSuperInterface.params.length > 0;
+			var possibleQnameWithoutParams:String = null;
+			if (hasParams) {
+				possibleQnameWithoutParams = possibleSuperInterface.name;
+				if (possibleSuperInterface.pack.length > 0) {
+					possibleQnameWithoutParams = possibleSuperInterface.pack.join(".") + "." + possibleQnameWithoutParams;
+				}
+			}
 			while (currentClassSymbol != null) {
-				if (currentClassSymbol.interfaces.indexOf(possibleSuperInterface) != -1) {
+				var foundInterface = Lambda.find(currentClassSymbol.interfaces, currentInterface -> {
+					if (currentInterface == possibleSuperInterface) {
+						return true;
+					}
+					if (hasParams) {
+						var currentQnameWithoutParams = currentInterface.name;
+						if (currentInterface.pack.length > 0) {
+							currentQnameWithoutParams = currentInterface.pack.join(".") + "." + currentQnameWithoutParams;
+						}
+						if (currentQnameWithoutParams == possibleQnameWithoutParams) {
+							// TODO: check that params are compatible
+							return true;
+						}
+					}
+					return false;
+				});
+				if (foundInterface != null) {
 					return true;
 				}
 				currentClassSymbol = currentClassSymbol.superClass;
