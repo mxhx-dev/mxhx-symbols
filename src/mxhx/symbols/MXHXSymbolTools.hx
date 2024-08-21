@@ -131,7 +131,7 @@ class MXHXSymbolTools {
 		if (fromAbstract.to.indexOf(toType) != -1) {
 			return true;
 		}
-		if (Lambda.findIndex(fromAbstract.meta, meta -> meta.name == ":transitive") != -1) {
+		if (Lambda.find(fromAbstract.meta, meta -> meta.name == ":transitive") != null) {
 			for (fromOtherType in fromAbstract.to) {
 				if (canAssignTo(fromOtherType, toType)) {
 					return true;
