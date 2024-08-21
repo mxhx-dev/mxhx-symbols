@@ -79,6 +79,9 @@ class MXHXSymbolTools {
 		if (fromType == toType) {
 			return true;
 		}
+		if ((toType.name == "Any" || toType.name == "Dynamic") && toType.pack.length == 0) {
+			return true;
+		}
 		if (toType.name == "Null") {
 			if (fromType.name == "Null") {
 				if (canAssignTo(fromType.params[0], toType.params[0])) {
