@@ -85,6 +85,14 @@ class MXHXSymbolTools {
 		if ((fromType.name == "Any" || fromType.name == "Dynamic") && fromType.pack.length == 0) {
 			return true;
 		}
+		if ((fromType is IMXHXFunctionTypeSymbol)) {
+			if ((toType is IMXHXFunctionTypeSymbol)) {
+				return true;
+			}
+			if (toType.name == "Function" && toType.pack.length > 0 && toType.pack[0] == "haxe") {
+				return true;
+			}
+		}
 		if ((fromType is IMXHXAbstractSymbol)) {
 			var fromAbstract:IMXHXAbstractSymbol = cast fromType;
 			if (canAssignAbstractTo(fromAbstract, toType)) {
