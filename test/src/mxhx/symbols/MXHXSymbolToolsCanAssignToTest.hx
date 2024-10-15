@@ -1,5 +1,6 @@
 package mxhx.symbols;
 
+import mxhx.symbols.internal.MXHXAbstractToOrFromInfo;
 import mxhx.symbols.internal.MXHXInterfaceSymbol;
 import mxhx.symbols.IMXHXInterfaceSymbol;
 import mxhx.symbols.IMXHXClassSymbol;
@@ -8,6 +9,7 @@ import mxhx.symbols.IMXHXTypeSymbol;
 import mxhx.symbols.MXHXSymbolTools;
 import mxhx.symbols.internal.MXHXAbstractSymbol;
 import mxhx.symbols.internal.MXHXClassSymbol;
+import mxhx.symbols.internal.MXHXFieldSymbol;
 import utest.Assert;
 import utest.Test;
 
@@ -28,6 +30,7 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 	private var customImplementingClassType:IMXHXClassSymbol;
 	private var customImplementingSubclassType:IMXHXClassSymbol;
 	private var customImplementingClassType2:IMXHXClassSymbol;
+	private var customAbstractType:IMXHXAbstractSymbol;
 
 	public function setup():Void {
 		anyType = new MXHXAbstractSymbol("Any");
@@ -39,10 +42,10 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		stringType = new MXHXClassSymbol("String");
 		uintType = new MXHXAbstractSymbol("UInt");
 
-		anyType.from = [dynamicType];
-		intType.to = [floatType];
-		uintType.from = [intType];
-		uintType.to = [intType];
+		anyType.from = [new MXHXAbstractToOrFromInfo(null, dynamicType)];
+		intType.to = [new MXHXAbstractToOrFromInfo(null, floatType)];
+		uintType.from = [new MXHXAbstractToOrFromInfo(null, intType)];
+		uintType.to = [new MXHXAbstractToOrFromInfo(null, intType)];
 		uintType.meta = [{name: ":transitive"}];
 
 		customClassType = new MXHXClassSymbol("MyClass", ["com", "example"]);
@@ -54,6 +57,12 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		customImplementingClassType = new MXHXClassSymbol("MyImplementingClass", ["com", "example"], null, null, [customInterfaceType]);
 		customImplementingSubclassType = new MXHXClassSymbol("MyImplementingSubclass", ["com", "example"], null, customImplementingClassType);
 		customImplementingClassType2 = new MXHXClassSymbol("MyImplementingClass", ["com", "example"], null, null, [customExtendingInterfaceType]);
+
+		customAbstractType = new MXHXAbstractSymbol("MyAbstractType", ["com", "example"]);
+		customAbstractType.from = [
+			new MXHXAbstractToOrFromInfo(null, stringType),
+			new MXHXAbstractToOrFromInfo(new MXHXFieldSymbol("fromInt"), intType)
+		];
 	}
 
 	public function testAssignToAny():Void {
@@ -242,5 +251,17 @@ class MXHXSymbolToolsCanAssignToTest extends Test {
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customImplementingClassType, customExtendingInterfaceType));
 		Assert.isFalse(MXHXSymbolTools.canAssignTo(customImplementingSubclassType, customExtendingInterfaceType));
 		Assert.isTrue(MXHXSymbolTools.canAssignTo(customImplementingClassType2, customExtendingInterfaceType));
+	}
+
+	public function testAssignToCustomAbstract():Void {
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(anyType, customAbstractType));
+		Assert.isFalse(MXHXSymbolTools.canAssignTo(boolType, customAbstractType));
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(dynamicType, customAbstractType));
+		Assert.isFalse(MXHXSymbolTools.canAssignTo(eregType, customAbstractType));
+		Assert.isFalse(MXHXSymbolTools.canAssignTo(floatType, customAbstractType));
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(intType, customAbstractType));
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(stringType, customAbstractType));
+		// uint can be assigned to int
+		Assert.isTrue(MXHXSymbolTools.canAssignTo(uintType, customAbstractType));
 	}
 }

@@ -19,6 +19,7 @@ package mxhx.symbols;
 **/
 interface IMXHXAbstractSymbol extends IMXHXTypeSymbol {
 	public var type:IMXHXTypeSymbol;
-	public var from:Array<IMXHXTypeSymbol>;
-	public var to:Array<IMXHXTypeSymbol>;
+	public var from:Array<IMXHXAbstractToOrFromInfo>;
+	public var to:Array<IMXHXAbstractToOrFromInfo>;
+	public var impl:IMXHXClassSymbol;
 }

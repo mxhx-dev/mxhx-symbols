@@ -136,12 +136,12 @@ class MXHXSymbolTools {
 	}
 
 	private static function canAssignAbstractTo(fromAbstract:IMXHXAbstractSymbol, toType:IMXHXTypeSymbol):Bool {
-		if (fromAbstract.to.indexOf(toType) != -1) {
+		if (Lambda.exists(fromAbstract.to, toOrFromInfo -> toOrFromInfo.type == toType)) {
 			return true;
 		}
 		if (Lambda.find(fromAbstract.meta, meta -> meta.name == ":transitive") != null) {
-			for (fromOtherType in fromAbstract.to) {
-				if (canAssignTo(fromOtherType, toType)) {
+			for (toOrFromInfo in fromAbstract.to) {
+				if (canAssignTo(toOrFromInfo.type, toType)) {
 					return true;
 				}
 			}
@@ -150,8 +150,10 @@ class MXHXSymbolTools {
 	}
 
 	private static function canAssignToAbstract(fromType:IMXHXTypeSymbol, toAbstract:IMXHXAbstractSymbol):Bool {
-		if (toAbstract.from.indexOf(fromType) != -1) {
-			return true;
+		for (toOrFromInfo in toAbstract.from) {
+			if (canAssignTo(fromType, toOrFromInfo.type)) {
+				return true;
+			}
 		}
 		return false;
 	}
