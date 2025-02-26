@@ -22,5 +22,6 @@ interface IMXHXTypeSymbol extends IMXHXSymbol {
 	public var module:String;
 	public var pack:Array<String>;
 	public var params:Array<IMXHXTypeSymbol>;
+	public var paramNames:Array<String>;
 	public var isPrivate:Bool;
 }
